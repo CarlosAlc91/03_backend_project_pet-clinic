@@ -1,4 +1,6 @@
+import { Server } from "./presentation/server.js";
 
+/*
 
 console.log("I'm the best");
 
@@ -34,3 +36,12 @@ app.post("/", (req: Request, res: Response) => {
 app.listen(PORT, () => {
   console.log(`I the server am listening in port ${PORT}`);
 });
+
+*/
+async function main() {
+  const server = new Server({ port: 3005 });
+
+  await server.start();
+}
+
+main();

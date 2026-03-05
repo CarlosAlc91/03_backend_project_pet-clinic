@@ -8,7 +8,7 @@ interface Options {
 }
 
 //siempre se tiene que primero importar la libreria express
-import express from "express";
+import express, { type Request, type Response } from "express";
 
 export class Server {
   //propiedades
@@ -19,5 +19,24 @@ export class Server {
   constructor(options: Options) {
     //la propiedad PORT = recibe el parametro del constructor port
     this.PORT = options.port;
+  }
+
+  //metodo asincrono encargado de inicializar la app
+  //metodo asincrono porque se va a tener controlar desde afuera de server.ts
+  async start() {
+    //middleware que le ensena a express a leer los .json ya que vamos a recibir informacion en json
+    this.app.use(express.json());
+    //middleware que le ensena a express a leer urlencoded
+    this.app.use(express.urlencoded({ extended: true }));
+
+    this.app.get("/", (req: Request, res: Response) => {
+      res.status(200).json({
+        message: "GET Method from server.ts",
+      });
+    });
+    //metodo HTTP para escuchart y ver que si efectivamente este funcionando el server
+    this.app.listen(this.PORT, () => {
+      console.log(`Second server is running on port ${this.PORT} 😎`);
+    });
   }
 }
