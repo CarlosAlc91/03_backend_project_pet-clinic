@@ -1,3 +1,4 @@
+import { AppRoutes } from "./presentation/routes.js";
 import { Server } from "./presentation/server.js";
 
 /*
@@ -39,7 +40,13 @@ app.listen(PORT, () => {
 
 */
 async function main() {
-  const server = new Server({ port: 3005 });
+  const server = new Server({
+    port: 3005,
+    //mandamos a llamar routes
+  routes: AppRoutes.routes
+  });
+
+  
 
   await server.start();
 }
