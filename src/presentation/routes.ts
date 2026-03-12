@@ -26,7 +26,7 @@ export class AppRoutes {
      * ya no se tiene que crear otra ruta users, solo en el browser se cambia la ruta del usuario
      * router.get("/user_id", en el web se pone localhost:port/users/user_id
      */
-    router.use("/users", UserRoutes.routes);
+    router.use("/api/users", UserRoutes.routes);
 
     //se retorna la constante router
     return router;
