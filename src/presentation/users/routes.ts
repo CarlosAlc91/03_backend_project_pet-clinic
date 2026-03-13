@@ -3,6 +3,8 @@
 //siemrpe importar express from express
 import { Router, type Request, type Response } from "express";
 import { UserController } from "./controller.js";
+import { FinderUsersService } from "./services/finder-users.service.js";
+import { RegisterUserService } from "./services/register-user.service.js";
 
 //creacion de cclase UserRoutes
 export class UserRoutes {
@@ -10,6 +12,11 @@ export class UserRoutes {
   static get routes(): Router {
     //constante router que guarda Router() de express
     const router = Router();
+
+    //se hace la instanciacion o instancia de los servicios finder y register
+    //una vez instanciado se pasa a UserController para terminar la dependencia
+    const finderUser = new FinderUsersService();
+    const registerUser = new RegisterUserService();
 
     /**
      * Una vez creado el controlador, ya no se necesitan el req y res
@@ -30,7 +37,7 @@ export class UserRoutes {
      */
 
     //para mandar a llamar los controladores o metodos se tienen que instanciar primiero
-    const controller = new UserController();
+    const controller = new UserController(finderUser, registerUser);
     //llamada del controlador, osea los metodos de los controladore
     router.get("/", controller.findAll);
 
