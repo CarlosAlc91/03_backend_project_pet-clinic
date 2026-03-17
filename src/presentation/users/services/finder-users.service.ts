@@ -2,7 +2,7 @@
 
 //crear clase toda la logica referente para buscar usuarios
 export class FinderUsersService {
-  //metodo asincrono
+  //metodo asincrono execute que va a ser usado dentro de controller.ts
   async execute() {
     //se va a retornar un arreglo de usuarios
     return [
