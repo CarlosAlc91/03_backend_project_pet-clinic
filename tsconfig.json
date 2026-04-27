@@ -12,6 +12,8 @@
     "target": "esnext",
     "esModuleInterop": true,
     "types": [],
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
     // For nodejs:
     // "lib": ["esnext"],
     // "types": ["node"],
