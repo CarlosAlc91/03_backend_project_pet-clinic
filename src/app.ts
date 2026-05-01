@@ -2,6 +2,7 @@ import "reflect-metadata";
 
 import { AppRoutes } from "./presentation/routes.js";
 import { Server } from "./presentation/server.js";
+import { envs } from "./config/envs.js";
 
 /*
 
@@ -43,7 +44,7 @@ app.listen(PORT, () => {
 */
 async function main() {
   const server = new Server({
-    port: 3005,
+    port: envs.PORT,
     //mandamos a llamar routes
     routes: AppRoutes.routes,
   });
