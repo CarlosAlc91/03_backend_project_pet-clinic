@@ -44,19 +44,20 @@ app.listen(PORT, () => {
 
 */
 async function main() {
-  //exportamos la clase de postgres-database.ts
+  //We export and instantiate the class we created in postgres-databese.ts
   const postgres = new PostgresDatabase({
-    //aqui nos los traemos de envs.ts
+    //Here we're calling the envs.ts
     username: envs.DATABASE_USERNAME,
     password: envs.DATABASE_PASSWORD,
     host: envs.DATABASE_HOST,
 
-    //este es el puerto de la base de datos, abajo esta el puero de la aplicacion
+    //This is database port from envs.ts
     port: envs.DATABASE_PORT,
     database: envs.DATABASE_NAME,
   });
 
-  //aqui conetactamos la base de datos de  postgres-database.ts con el metodo connect
+  //Here we connect to the postgres-database.ts database using the connect method
+  //#We're using await since we used an async method in postgres-database.t
   await postgres.connect();
 
   const server = new Server({
