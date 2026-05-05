@@ -3,6 +3,7 @@ import "reflect-metadata";
 import { AppRoutes } from "./presentation/routes.js";
 import { Server } from "./presentation/server.js";
 import { envs } from "./config/envs.js";
+import { PostgresDatabase } from "./data/index.js";
 
 /*
 
@@ -43,6 +44,21 @@ app.listen(PORT, () => {
 
 */
 async function main() {
+  //exportamos la clase de postgres-database.ts
+  const postgres = new PostgresDatabase({
+    //aqui nos los traemos de envs.ts
+    username: envs.DATABASE_USERNAME,
+    password: envs.DATABASE_PASSWORD,
+    host: envs.DATABASE_HOST,
+
+    //este es el puerto de la base de datos, abajo esta el puero de la aplicacion
+    port: envs.DATABASE_PORT,
+    database: envs.DATABASE_NAME,
+  });
+
+  //aqui conetactamos la base de datos de  postgres-database.ts con el metodo connect
+  await postgres.connect();
+
   const server = new Server({
     port: envs.PORT,
     //mandamos a llamar routes
