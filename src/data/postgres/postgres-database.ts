@@ -1,4 +1,5 @@
 import { DataSource } from "typeorm";
+import { User } from "./models/uner.model.js";
 
 //interface created to be passed to our constructor
 interface Options {
@@ -23,7 +24,8 @@ export class PostgresDatabase {
       password: options.password,
       database: options.database,
       synchronize: true,
-      entities: [],
+      //in here we bring our entities from user.model.ts
+      entities: [User],
       ssl: {
         rejectUnauthorized: false,
       },

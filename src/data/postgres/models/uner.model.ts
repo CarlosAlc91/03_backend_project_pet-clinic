@@ -57,7 +57,7 @@ export class User extends BaseEntity {
   email: string;
 
   //phone_number VARCHAR(20) [not null, unique]
-  @Column("string", {
+  @Column("varchar", {
     length: 20,
     nullable: false,
     unique: true,
