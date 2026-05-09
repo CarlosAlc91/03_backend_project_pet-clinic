@@ -59,3 +59,6 @@ export class Appointments extends BaseEntity {
   })
   created_at: Date;
 }
+
+
+//8 - 26:00
