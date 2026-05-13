@@ -1,3 +1,6 @@
+//siempre se tiene que primero importar la libreria express
+import express, { Router, type Request, type Response } from "express";
+
 //aqui es donde se va a configurar realmente la aplicacion
 //se va a configurar el servidor de express
 
@@ -9,8 +12,21 @@ interface Options {
   routes: Router;
 }
 
-//siempre se tiene que primero importar la libreria express
-import express, { Router, type Request, type Response } from "express";
+/**
+ * Class representing an Express server
+ *
+ * @example
+ * ```ts
+ * import {Server} from "./presentation/server"
+ * import {AppRoutes} from "./presentation/routes"
+ * const server = new Server({
+ *
+ * port: 400,
+ * routes: AppRoutes.routes,
+ *
+ * })
+ * ```
+ */
 
 export class Server {
   //propiedades
@@ -31,6 +47,12 @@ export class Server {
 
   //metodo asincrono encargado de inicializar la app
   //metodo asincrono porque se va a tener controlar desde afuera de server.ts
+  /**
+   * Start the Express server
+   *
+   * @remarks
+   * Este metodo debe ser llamada para ejecutar el servidor de express
+   */
   async start() {
     //middleware que le ensena a express a leer los .json ya que vamos a recibir informacion en json
     this.app.use(express.json());
