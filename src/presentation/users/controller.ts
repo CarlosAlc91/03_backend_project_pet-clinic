@@ -45,10 +45,10 @@ export class UserController {
     });
      * 
      */
-
+    //console.log(req.body);
     this.registerUser
       //.execute es el metodo que se creo en register-users.service.ts
-      .execute()
+      .execute(req.body)
       //cuando son registros o creacion de informacion se pone status 201
       .then((message) => res.status(201).json(message))
       .catch((err) => res.status(500).json({ message: err.message }));
