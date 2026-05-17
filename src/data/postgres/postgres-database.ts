@@ -1,5 +1,5 @@
 import { DataSource } from "typeorm";
-import { User } from "./models/uner.model.js";
+import { User } from "./models/user.model.js";
 import { Pets } from "./models/pets.model.js";
 import { Doctor } from "./models/doctor.model.js";
 import { Appointments } from "./models/appointments.model.js";
@@ -55,6 +55,7 @@ export class PostgresDatabase {
       password: options.password,
       database: options.database,
       synchronize: true,
+      //logging: true,
       // Here we include our entities from their respective models
       entities: [User, Pets, Doctor, Appointments, Species],
 
@@ -78,6 +79,7 @@ export class PostgresDatabase {
       console.log("Database connected");
     } catch (error) {
       console.error(error);
+      //throw new Error("error");
     }
   }
 }

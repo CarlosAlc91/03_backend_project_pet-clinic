@@ -68,7 +68,7 @@ export class UserController {
     */
 
     this.finderUser
-      .execute()
+      .execute(req.body)
       .then((message) => res.status(200).json(message))
       .catch((err) => res.status(500).json({ message: err.message }));
   };

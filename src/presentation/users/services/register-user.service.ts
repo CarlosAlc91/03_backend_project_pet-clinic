@@ -1,4 +1,4 @@
-import { User } from "../../../data/postgres/models/uner.model.js";
+import { User } from "../../../data/postgres/models/user.model.js";
 
 //clase para registrar a un usuario
 export class RegisterUserService {
@@ -20,6 +20,7 @@ export class RegisterUserService {
         message: "User created successfully",
       };
     } catch (error) {
+      console.error("Error in RegisterUserSErvice");
       throw new Error("An error occurred while registering the user");
     }
 
