@@ -2,19 +2,21 @@ import { User } from "../../../data/postgres/models/user.model.js";
 
 export class FinderUserService {
   async execute(userId: string) {
-    try {
-      return await User.findOne({
-        select: ["id", "fullname", "email", "phone_number", "role"],
-        where: {
-          id: userId,
-          status: true,
-        },
-      });
-    } catch (error) {
-      console.error("Error en FinderUserService")
-      throw new Error("An erro occurred while searching for the user");
+    const user = await User.findOne({
+      select: ["id", "fullname", "email", "phone_number", "role"],
+      where: {
+        id: userId,
+        status: true,
+      },
+    });
+
+    //if we don't find the user throw this error
+    if (!user) {
+      throw new Error(`User with id: ${userId} not found`);
     }
+    //if found return/show it
+    return user;
   }
 }
 
-//9 - 1:00
+//9 - 1:05

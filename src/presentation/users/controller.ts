@@ -58,18 +58,15 @@ export class UserController {
   findOne = (req: Request, res: Response) => {
     //toda la informacion del usuario viene del req:Request, ya que es informacion que envia el cliente
     //se hace una destructuracion
-    /*
     const { id } = req.params;
-    return res.status(200).json({
-      //agregamos id a la respuesta
-      id: id,
-      message: "GET request from controller.ts (user found)",
-    });
-    */
+
+    if (!id || typeof id !== "string") {
+      return res.status(400).json({ message: "User ID is required" });
+    }
 
     this.finderUser
-      .execute(req.body)
-      .then((message) => res.status(200).json(message))
+      .execute(id)
+      .then((user) => res.status(200).json(user))
       .catch((err) => res.status(500).json({ message: err.message }));
   };
 
@@ -107,4 +104,4 @@ export class UserController {
   };
 }
 
-//9 - 1:00
+//9 - 1:05

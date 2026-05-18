@@ -55,13 +55,13 @@ export class UserRoutes {
 
     router.post("/register", controller.register);
     //metodo para encontrar a un usuario por id
-    router.get("/:id/found", controller.findOne);
+    router.get("/:id", controller.findOne);
 
     //patch hay que saber que vamos a actualizar
-    router.patch("/:id/updated", controller.update);
+    router.patch("/:id", controller.update);
 
     //detele, para eliminar informacion del usuario o al usuario
-    router.delete("/:id/deleted", controller.delete);
+    router.delete("/:id", controller.delete);
 
     //retornamos la constante router que tiene el Router de express
     return router;
