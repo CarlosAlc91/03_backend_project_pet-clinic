@@ -16,18 +16,8 @@ export class UpdateUserService {
   async execute(userId: string, userData: any) {
     // Verify if the user exists and is currently active in the system
     // Using select: ["id"] for performance optimization since we only need to verify existence
-    const user = await User.findOne({
-      select: ["id"],
-      where: {
-        id: userId,
-        status: true, // Only allow updating active
-      },
-    });
 
-    // If no active user is found with the provided ID, abort the update
-    if (!user) {
-      throw new Error(`User with ID ${userId} not found `);
-    }
+    const user = await this.ensureUserExists(userId);
 
     // Apply the updated values from userData to the corresponding user fields
     // Note: This will overwrite all specified fields even if they're undefined in userData
@@ -50,5 +40,23 @@ export class UpdateUserService {
       // Provide a consistent error message while hiding internal database details
       throw new Error("Error occurred while updating the user");
     }
+  }
+
+  //metdo privado para hacer la validacion de la existencia deun ususairo
+  private async ensureUserExists(userId: string): Promise<User> {
+    const user = await User.findOne({
+      select: ["id"],
+      where: {
+        id: userId,
+        status: true, // Only allow updating active
+      },
+    });
+
+    // If no active user is found with the provided ID, abort the update
+    if (!user) {
+      throw new Error(`User with ID ${userId} not found `);
+    }
+
+    return user;
   }
 }
