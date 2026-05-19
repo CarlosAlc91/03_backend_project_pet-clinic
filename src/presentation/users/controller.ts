@@ -72,17 +72,11 @@ export class UserController {
 
   //metodo patch para hacer updates
   update = (req: Request, res: Response) => {
-    /**
-    *  const { id } = req.params;
-    return res.status(200).json({
-      id: id,
-      message: "PATCH request from controlles.ts (user updated)",
-    });
-    */
-
+    const { id } = req.params;
     this.updateUser
-      .execute()
-      .then((message) => res.status(200).json(message))
+      .execute(id as string, req.body)
+      //we're receiving the user and then we sent the updated user
+      .then((user) => res.status(200).json(user))
       .catch((err) => res.status(500).json({ message: err.message }));
   };
 
