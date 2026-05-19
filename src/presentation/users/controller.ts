@@ -112,9 +112,11 @@ export class UserController {
    * TODO: Implement ID extraction from req.params to identify which user to delete
    */
   delete = (req: Request, res: Response) => {
+    const { id } = req.params;
     this.deleteUser
-      .execute()
-      .then((message) => res.status(200).json(message))
+      .execute(id as string)
+      //status 204 means "no content"
+      .then(() => res.status(204).json(null))
       .catch((err) => res.status(500).json({ message: err.message }));
   };
 }
