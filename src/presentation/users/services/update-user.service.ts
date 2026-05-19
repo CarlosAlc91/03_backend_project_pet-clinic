@@ -1,7 +1,7 @@
 import { User } from "../../../data/postgres/models/user.model.js";
 
 export class UpdateUserService {
-  async execute(/*userId: string*/) {
+  async execute(userId: string, userData: any) {
     /*
     try {
       return await User.update({
