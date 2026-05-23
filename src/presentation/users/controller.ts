@@ -12,7 +12,7 @@ import { RegisterUserService } from "./services/register-user.service.js";
 import type { FinderUserService } from "./services/finder-user.service.js";
 import type { UpdateUserService } from "./services/update-user.service.js";
 import type { DeleteUserService } from "./services/delete-user.service.js";
-import { RegisterUserDto } from "../../domain/index.js";
+import { RegisterUserDto, UpdateUserDto } from "../../domain/index.js";
 
 export class UserController {
   constructor(
@@ -102,8 +102,14 @@ export class UserController {
    */
   update = (req: Request, res: Response) => {
     const { id } = req.params; // Extract the ID of the user to update
+
+    const [error, updateUserDto] = UpdateUserDto.execute(req.body);
+
+    if (error) {
+      return res.status(422).json({ message: error });
+    }
     this.updateUser
-      .execute(id as string, req.body) // Send the ID and new data to the service
+      .execute(id as string, updateUserDto!) // Send the ID and new data to the service
 
       .then((user) => res.status(200).json(user)) // Return successful update confirmation
       .catch((err) => res.status(500).json({ message: err.message })); // Server error

@@ -1,4 +1,5 @@
 import { User } from "../../../data/postgres/models/user.model.js";
+import type { UpdateUserDto } from "../../../domain/index.js";
 /**
  * Service responsible for updating existing user information.
  * Handles user data modification with validation and error handling.
@@ -13,7 +14,7 @@ export class UpdateUserService {
    * @throws Error if the user doesn't exist or is inactive
    * @throws Error if the save operation fails
    */
-  async execute(userId: string, userData: any) {
+  async execute(userId: string, userData: UpdateUserDto) {
     // Verify if the user exists and is currently active in the system
     // Using select: ["id"] for performance optimization since we only need to verify existence
 
@@ -25,7 +26,7 @@ export class UpdateUserService {
     user.password = userData.password;
     user.email = userData.email;
     user.phone_number = userData.phone_number;
-    user.role = userData.role;
+    //user.role = userData.role;
 
     // Attempt to persist the changes to the database
     // Wrapped in try-catch to handle potential database errors gracefullyhile updating
