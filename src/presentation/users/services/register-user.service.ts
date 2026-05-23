@@ -1,16 +1,17 @@
 import { User } from "../../../data/postgres/models/user.model.js";
+import type { RegisterUserDto } from "../../../domain/index.js";
 
 //clase para registrar a un usuario
 export class RegisterUserService {
   //metodo asincrono para devolver un mensaje cuando se haya regustrado un usuario exitosamente
-  async execute(userData: any) {
+  async execute(userData: RegisterUserDto) {
     const user = new User();
 
     user.fullname = userData.fullname;
     user.email = userData.email;
     user.password = userData.password;
     user.phone_number = userData.phone_number;
-    user.role = userData.role;
+    //user.role = userData.role;
 
     try {
       //const userCreated =
@@ -23,11 +24,13 @@ export class RegisterUserService {
       console.error("Error in RegisterUserSErvice");
       throw new Error("An error occurred while registering the user");
     }
-
-    return {
+    /**
+ * return {
       message: "User registered successfully",
       userData,
     };
+ * 
+ */
   }
 }
 

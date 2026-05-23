@@ -62,7 +62,7 @@ export class User extends BaseEntity {
     nullable: false,
     unique: true,
   })
-  phone_number: number;
+  phone_number: string;
 
   //role user_role [default: 'user']
   @Column("enum", {

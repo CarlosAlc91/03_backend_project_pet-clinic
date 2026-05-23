@@ -12,6 +12,7 @@ import { RegisterUserService } from "./services/register-user.service.js";
 import type { FinderUserService } from "./services/finder-user.service.js";
 import type { UpdateUserService } from "./services/update-user.service.js";
 import type { DeleteUserService } from "./services/delete-user.service.js";
+import { RegisterUserDto } from "../../domain/index.js";
 
 export class UserController {
   constructor(
@@ -55,9 +56,16 @@ export class UserController {
    * @returns JSON with confirmation message (status 201) or error (status 500)
    */
   register = (req: Request, res: Response) => {
-    this.registerUser
+    //desestructurar regisruserdto
+    const [error, registerUserDtos] = RegisterUserDto.execute(req.body);
 
-      .execute(req.body) // Pass the body data to the registration service
+    if (error) {
+      return res.status(422).json({ message: error });
+    }
+
+    this.registerUser
+      //aqui se pasa el metodo que esta junto al [error, registerUserDto]
+      .execute(registerUserDtos!) // Pass the body data to the registration service
 
       .then((message) => res.status(201).json(message)) // Status 201: resource successfully created
       .catch((err) => res.status(500).json({ message: err.message })); // Server error
