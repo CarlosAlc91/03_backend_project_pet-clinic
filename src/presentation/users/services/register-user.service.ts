@@ -1,9 +1,18 @@
 import { User } from "../../../data/postgres/models/user.model.js";
-import type { RegisterUserDto } from "../../../domain/index.js";
+import { CustomError, type RegisterUserDto } from "../../../domain/index.js";
 
-//clase para registrar a un usuario
+/**
+ * Service responsible for handling the business logic of user registration.
+ * Manages data mapping, database persistence, and database-specific exception handling.
+ */
 export class RegisterUserService {
-  //metodo asincrono para devolver un mensaje cuando se haya regustrado un usuario exitosamente
+  /**
+   * Executes the user registration process.
+   * Maps the incoming DTO data to the database entity and attempts to persist it.
+   * * @param userData - The Data Transfer Object containing the new user's credentials and details.
+   * @returns A promise that resolves to a success message object upon successful registration.
+   * @throws {CustomError} Throws a mapped HTTP exception if validation or persistence fails.
+   */
   async execute(userData: RegisterUserDto) {
     const user = new User();
 
@@ -20,18 +29,28 @@ export class RegisterUserService {
       return {
         message: "User created successfully",
       };
-    } catch (error) {
-      console.error("Error in RegisterUserSErvice");
-      throw new Error("An error occurred while registering the user");
+    } catch (error: any) {
+      this.throwException(error);
     }
-    /**
- * return {
-      message: "User registered successfully",
-      userData,
-    };
- * 
- */
+  }
+
+  /**
+   * Intercepts database runtime errors and maps PostgreSQL error codes to standard HTTP exceptions.
+   * * @param error - The raw error object caught from the database transaction.
+   * @throws {CustomError} Mapped exception matching the database failure (409 Conflict, 422 Unprocessable Entity, or 500 Internal Server).
+   * @private
+   */
+  private throwException(error: any) {
+    // PostgreSQL Code '23505': Unique violation error (e.g., duplicate email)
+    if (error.code === "23505") {
+      throw CustomError.conflict("Email already in use");
+    }
+    // PostgreSQL Code '22P02': Invalid text representation / Data type mismatch
+    if (error.code === "22P02") {
+      throw CustomError.unprocessableEntity("Invalid data type");
+    }
+
+    // Fallback for unhandled database exceptions or general internal server runtime failures
+    throw CustomError.internalSever("Error trying to create user");
   }
 }
-
-//9 - 35:00

@@ -1,4 +1,5 @@
 import { User } from "../../../data/postgres/models/user.model.js";
+import { CustomError } from "../../../domain/index.js";
 
 export class FinderUserService {
   async execute(userId: string) {
@@ -12,10 +13,9 @@ export class FinderUserService {
 
     //if we don't find the user throw this error
     if (!user) {
-      throw new Error(`User with id: ${userId} not found`);
+      throw CustomError.notFound(`User with id ${userId} not foud`);
     }
     //if found return/show it
     return user;
   }
 }
-

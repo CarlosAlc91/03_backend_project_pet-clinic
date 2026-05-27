@@ -1,6 +1,7 @@
 //se hace la creacion de finder-users.service.ts para crear un servicio por metodo
 
 import { User } from "../../../data/postgres/models/user.model.js";
+import { CustomError } from "../../../domain/index.js";
 
 //crear clase toda la logica referente para buscar usuarios
 export class FinderUsersService {
@@ -34,8 +35,7 @@ export class FinderUsersService {
         },
       });
     } catch (error) {
-      console.error("Error in FinderUsersService");
-      throw new Error("An error ocurred while searching for user");
+      throw CustomError.internalSever("Error trying to find users");
     }
   }
 }

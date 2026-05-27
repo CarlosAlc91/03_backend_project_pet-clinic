@@ -56,6 +56,16 @@ export class CustomError extends Error {
     return new CustomError(message, 404);
   }
 
+  //conflic errors
+  static conflict(message: string) {
+    return new CustomError(message, 409);
+  }
+
+  //unprocessable Entity
+  static unprocessableEntity(message: string) {
+    return new CustomError(message, 422);
+  }
+
   /**
    * Generates a 500 Internal Server Error.
    * Used as a fallback for unexpected server-side exceptions or unhandled runtime failures.

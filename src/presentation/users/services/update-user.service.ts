@@ -1,5 +1,5 @@
 import { User } from "../../../data/postgres/models/user.model.js";
-import type { UpdateUserDto } from "../../../domain/index.js";
+import { CustomError, type UpdateUserDto } from "../../../domain/index.js";
 /**
  * Service responsible for updating existing user information.
  * Handles user data modification with validation and error handling.
@@ -39,25 +39,50 @@ export class UpdateUserService {
       };
     } catch (error) {
       // Provide a consistent error message while hiding internal database details
-      throw new Error("Error occurred while updating the user");
+      this.throwException(error);
     }
   }
 
-  //metdo privado para hacer la validacion de la existencia deun ususairo
+  /**
+   * Validates if a user exists and is currently active.
+   * @param userId - The unique identifier to look up.
+   * @returns A promise that resolves to the fully loaded active User entity.
+   * @throws {CustomError} 404 Not Found if the user does not exist or is inactive.
+   * @private
+   */
   private async ensureUserExists(userId: string): Promise<User> {
     const user = await User.findOne({
       select: ["id"],
       where: {
         id: userId,
-        status: true, // Only allow updating active
+        status: true, // Restrict updates to active accounts only
       },
     });
 
     // If no active user is found with the provided ID, abort the update
     if (!user) {
-      throw new Error(`User with ID ${userId} not found `);
+      throw CustomError.notFound(`User with id: ${userId} not found`);
     }
 
     return user;
+  }
+
+  /**
+   * Intercepts database runtime errors during update operations and maps them to HTTP exceptions.
+   * @param error - The raw error object caught from the database transaction.
+   * @throws {CustomError} Mapped exception (409 Conflict, 422 Unprocessable Entity, or 500 Internal Server).
+   * @private
+   */ private throwException(error: any) {
+    // PostgreSQL Code '23505': Unique violation (e.g., trying to update to an email already taken)
+    if (error.code === "23505") {
+      throw CustomError.conflict("Email already in use");
+    }
+    // PostgreSQL Code '22P02': Invalid text representation / Data type mismatch
+    if (error.code === "22P02") {
+      throw CustomError.unprocessableEntity("Invalid data type");
+    }
+
+    // Fallback for unhandled database exceptions or internal runtime failures
+    throw CustomError.internalSever("Error trying to update user");
   }
 }

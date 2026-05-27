@@ -13,6 +13,8 @@ import type { FinderUserService } from "./services/finder-user.service.js";
 import type { UpdateUserService } from "./services/update-user.service.js";
 import type { DeleteUserService } from "./services/delete-user.service.js";
 import { RegisterUserDto, UpdateUserDto } from "../../domain/index.js";
+import { CustomError } from "../../domain/errors/custom.error.js";
+import { CLIENT_RENEG_WINDOW } from "node:tls";
 
 export class UserController {
   constructor(
@@ -32,6 +34,15 @@ export class UserController {
     private readonly deleteUser: DeleteUserService,
   ) {}
 
+  private handleError = (error: unknown, res: Response) => {
+    if (error instanceof CustomError) {
+      return res.status(error.statusCode).json({ message: error.message });
+    }
+
+    console.log(error);
+    return res.status(500).json({ message: "Something went wrong🧨" });
+  };
+
   /**
    * Retrieves the complete list of all active users.
    *
@@ -44,7 +55,7 @@ export class UserController {
     this.finderUsers
       .execute() // Execute the search for all users
       .then((users) => res.status(200).json(users)) // Return the found users
-      .catch((err) => res.status(500).json({ mesage: err.message })); // Handle server errors
+      .catch((err) => this.handleError(err, res)); // Handle server errors
   };
 
   /**
@@ -68,7 +79,7 @@ export class UserController {
       .execute(registerUserDtos!) // Pass the body data to the registration service
 
       .then((message) => res.status(201).json(message)) // Status 201: resource successfully created
-      .catch((err) => res.status(500).json({ message: err.message })); // Server error
+      .catch((err) => this.handleError(err, res)); // Server error
   };
 
   /**
@@ -89,7 +100,7 @@ export class UserController {
     this.finderUser
       .execute(id) // Find the user by their ID
       .then((user) => res.status(200).json(user)) // Return the found user
-      .catch((err) => res.status(500).json({ message: err.message })); // Server error
+      .catch((err) => this.handleError(err, res)); // Server error
   };
 
   /**
@@ -112,7 +123,7 @@ export class UserController {
       .execute(id as string, updateUserDto!) // Send the ID and new data to the service
 
       .then((user) => res.status(200).json(user)) // Return successful update confirmation
-      .catch((err) => res.status(500).json({ message: err.message })); // Server error
+      .catch((err) => this.handleError(err, res)); // Server error
   };
 
   /**
@@ -131,6 +142,6 @@ export class UserController {
       .execute(id as string)
       //status 204 means "no content"
       .then(() => res.status(204).json(null))
-      .catch((err) => res.status(500).json({ message: err.message }));
+      .catch((err) => this.handleError(err, res));
   };
 }

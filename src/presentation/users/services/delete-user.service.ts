@@ -1,4 +1,5 @@
 import { User } from "../../../data/postgres/models/user.model.js";
+import { CustomError } from "../../../domain/index.js";
 /**
  * Service responsible for soft-deleting users from the system.
  * Instead of permanently removing records, it deactivates users by setting their status to false.
@@ -24,7 +25,7 @@ export class DeleteUserService {
       await user.save();
     } catch (error) {
       // Wrap database errors with a user-friendly message
-      throw new Error("Error occurred while deleting the user");
+      throw CustomError.internalSever("Error trying to delete user");
     }
   }
 
@@ -49,7 +50,7 @@ export class DeleteUserService {
 
     // If no active user is found, throw an error to prevent duplicate deletion attempts
     if (!user) {
-      throw new Error(`User with id: ${userId} not found`);
+      throw CustomError.notFound(`User with id ${userId} not found`);
     }
     return user;
   }
