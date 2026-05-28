@@ -23,6 +23,9 @@ export class DeleteUserService {
     try {
       // Persist the status change to the database
       await user.save();
+      return {
+        message: "User deleted successfully.",
+      };
     } catch (error) {
       // Wrap database errors with a user-friendly message
       throw CustomError.internalSever("Error trying to delete user");
