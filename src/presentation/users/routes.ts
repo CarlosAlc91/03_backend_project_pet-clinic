@@ -8,6 +8,7 @@ import { RegisterUserService } from "./services/register-user.service.js";
 import { FinderUserService } from "./services/finder-user.service.js";
 import { UpdateUserService } from "./services/update-user.service.js";
 import { DeleteUserService } from "./services/delete-user.service.js";
+import { LoginUserService } from "./services/login-user.service.js";
 
 //creacion de cclase UserRoutes
 export class UserRoutes {
@@ -23,6 +24,7 @@ export class UserRoutes {
     const finderUser = new FinderUserService();
     const updateUser = new UpdateUserService();
     const deleteUser = new DeleteUserService();
+    const loginUser = new LoginUserService();
 
     /**
      * Una vez creado el controlador, ya no se necesitan el req y res
@@ -49,11 +51,13 @@ export class UserRoutes {
       finderUser,
       updateUser,
       deleteUser,
+      loginUser,
     );
     //llamada del controlador, osea los metodos de los controladore
     router.get("/", controller.findAll);
 
     router.post("/register", controller.register);
+    //router.get("/login");
     //metodo para encontrar a un usuario por id
     router.get("/:id", controller.findOne);
 
@@ -62,9 +66,9 @@ export class UserRoutes {
 
     //detele, para eliminar informacion del usuario o al usuario
     router.delete("/:id", controller.delete);
+    router.post("/login", controller.login);
 
     //retornamos la constante router que tiene el Router de express
     return router;
   }
 }
-

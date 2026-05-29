@@ -12,9 +12,14 @@ import { RegisterUserService } from "./services/register-user.service.js";
 import type { FinderUserService } from "./services/finder-user.service.js";
 import type { UpdateUserService } from "./services/update-user.service.js";
 import type { DeleteUserService } from "./services/delete-user.service.js";
-import { RegisterUserDto, UpdateUserDto } from "../../domain/index.js";
+import {
+  LoginUserDto,
+  RegisterUserDto,
+  UpdateUserDto,
+} from "../../domain/index.js";
 import { CustomError } from "../../domain/errors/custom.error.js";
 import { CLIENT_RENEG_WINDOW } from "node:tls";
+import type { LoginUserService } from "./services/login-user.service.js";
 
 export class UserController {
   constructor(
@@ -32,6 +37,7 @@ export class UserController {
     private readonly updateUser: UpdateUserService,
     // Service to delete/deactivate users
     private readonly deleteUser: DeleteUserService,
+    private readonly loginUser: LoginUserService,
   ) {}
 
   private handleError = (error: unknown, res: Response) => {
@@ -144,4 +150,19 @@ export class UserController {
       .then(() => res.status(204).json(null))
       .catch((err) => this.handleError(err, res));
   };
+
+  login = (req: Request, res: Response) => {
+    const [error, loginUserDto] = LoginUserDto.execute(req.body);
+
+    if (error) {
+      return res.status(422).json({ message: error });
+    }
+
+    this.loginUser
+      .execute(loginUserDto!)
+      .then((data) => res.status(200).json(data))
+      .catch((err) => this.handleError(err, res));
+  };
 }
+
+//12 - 34:00
