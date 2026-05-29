@@ -2,3 +2,4 @@
 
 export { envs } from "./envs.js";
 export * from "./regex.js";
+export * from "./bcrypt.adapter.js"

@@ -1,3 +1,4 @@
+import { encriptAdapter } from "../../../config/bcrypt.adapter.js";
 import { User } from "../../../data/postgres/models/user.model.js";
 import { CustomError, type RegisterUserDto } from "../../../domain/index.js";
 
@@ -18,7 +19,7 @@ export class RegisterUserService {
 
     user.fullname = userData.fullname;
     user.email = userData.email;
-    user.password = userData.password;
+    user.password = this.encriptedPassword(userData.password);
     user.phone_number = userData.phone_number;
     //user.role = userData.role;
 
@@ -52,5 +53,10 @@ export class RegisterUserService {
 
     // Fallback for unhandled database exceptions or general internal server runtime failures
     throw CustomError.internalSever("Error trying to create user");
+  }
+
+  //method to encript passwords
+  private encriptedPassword(password: string): string {
+    return encriptAdapter.hash(password);
   }
 }
