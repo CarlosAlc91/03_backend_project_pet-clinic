@@ -7,8 +7,10 @@ export const encriptAdapter = {
     //salt how many times a password will be encripted
     const salt = genSaltSync(12);
     //we're returning a hashSync(password we want to encrypt, how many jumps)
-    return hashSync(password, salt)
+    return hashSync(password, salt);
+  },
+
+  compare: (unHashedPassword: string, hashedPassword: string) => {
+    return compareSync(unHashedPassword, hashedPassword);
   },
 };
-
-
