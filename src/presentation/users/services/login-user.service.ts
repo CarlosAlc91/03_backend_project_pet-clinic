@@ -1,4 +1,6 @@
 import { encriptAdapter } from "../../../config/bcrypt.adapter.js";
+import { envs } from "../../../config/envs.js";
+import { JwtAdapter } from "../../../config/jwt.adapter.js";
 import { User } from "../../../data/postgres/models/user.model.js";
 import type { LoginUserDto } from "../../../domain/dtos/users/login-user.dto.js";
 import { CustomError } from "../../../domain/index.js";
@@ -10,7 +12,17 @@ export class LoginUserService {
     //2. check if password is correct
     this.ensurePasswordIsCorrect(credentials.password, user!.password);
     //3. generate a token
+    const token = await this.generateToken({ id: user!.id }, envs.JWT_EXPIRE_IN);
     //4. return token
+    return {
+      token,
+      user: {
+        id: user?.id,
+        email: user?.email,
+        phone: user?.phone_number,
+        role: user?.role
+      }
+    }
   }
 
   private ensureUserExists(email: string) {
@@ -39,5 +51,11 @@ export class LoginUserService {
     }
   }
 
-  private generateToken() {}
+  private async generateToken(payload: any, duration: string) {
+    const token = await JwtAdapter.generateToken(payload, duration);
+
+    if (!token) throw CustomError.internalSever("Error while creating JWT");
+
+    return token;
+  }
 }

@@ -20,6 +20,7 @@ import {
 import { CustomError } from "../../domain/errors/custom.error.js";
 import { CLIENT_RENEG_WINDOW } from "node:tls";
 import type { LoginUserService } from "./services/login-user.service.js";
+import { envs } from "../../config/envs.js";
 
 export class UserController {
   constructor(
@@ -160,7 +161,16 @@ export class UserController {
 
     this.loginUser
       .execute(loginUserDto!)
-      .then((data) => res.status(200).json(data))
+      .then((data) => {
+        res.cookie("token", data.token, {
+          httpOnly: true,
+          secure: envs.NODE_ENV === "production",
+          sameSite: "strict",
+          maxAge: 3 * 60 * 60 * 1000,
+        });
+
+        return res.status(200).json({ user: data.user });
+      })
       .catch((err) => this.handleError(err, res));
   };
 }
