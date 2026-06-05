@@ -21,4 +21,10 @@ export const envs = {
   DATABASE_NAME: env.get("DATABASE_NAME").required().asString(),
   JWT_KEY: env.get("JWT_KEY").required().asString(),
   JWT_EXPIRE_IN: env.get("JWT_EXPIRE_IN").required().asString(),
+
+  MAILER_SEREVICE: env.get("MAILER_SEREVICE").required().asString(),
+  MAILER_EMAIL: env.get("MAILER_EMAIL").required().asString(),
+  MAILER_SECRET_KEY: env.get("MAILER_SECRET_KEY").required().asString(),
+  WEBSERVICE_URL: env.get("WEBSERVICE_URL").required().asString(),
+  SEND_MAIL: env.get("SEND_MAIL").required().asBool(),
 };

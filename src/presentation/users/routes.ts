@@ -9,6 +9,8 @@ import { FinderUserService } from "./services/finder-user.service.js";
 import { UpdateUserService } from "./services/update-user.service.js";
 import { DeleteUserService } from "./services/delete-user.service.js";
 import { LoginUserService } from "./services/login-user.service.js";
+import { EmailService } from "../common/services/email.service.js";
+import { envs } from "../../config/envs.js";
 
 //creacion de cclase UserRoutes
 export class UserRoutes {
@@ -19,8 +21,14 @@ export class UserRoutes {
 
     //se hace la instanciacion o instancia de los servicios finder y register
     //una vez instanciado se pasa a UserController como dependencias
+    const emailService = new EmailService(
+      envs.MAILER_SEREVICE,
+      envs.MAILER_EMAIL,
+      envs.MAILER_SECRET_KEY,
+      envs.SEND_MAIL,
+    );
     const finderUsers = new FinderUsersService();
-    const registerUser = new RegisterUserService();
+    const registerUser = new RegisterUserService(emailService);
     const finderUser = new FinderUserService();
     const updateUser = new UpdateUserService();
     const deleteUser = new DeleteUserService();
@@ -67,6 +75,7 @@ export class UserRoutes {
     //detele, para eliminar informacion del usuario o al usuario
     router.delete("/:id", controller.delete);
     router.post("/login", controller.login);
+    router.get("/validate-account/:token", controller.validateAccount);
 
     //retornamos la constante router que tiene el Router de express
     return router;

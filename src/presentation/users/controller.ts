@@ -173,6 +173,8 @@ export class UserController {
       })
       .catch((err) => this.handleError(err, res));
   };
+
+  validateAccount = (req: Request, res: Response) => {}
 }
 
 //12 - 34:00

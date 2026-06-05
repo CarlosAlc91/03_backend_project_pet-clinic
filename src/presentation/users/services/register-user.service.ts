@@ -1,12 +1,19 @@
+import { userInfo } from "node:os";
 import { encriptAdapter } from "../../../config/bcrypt.adapter.js";
+import { envs } from "../../../config/envs.js";
+import { JwtAdapter } from "../../../config/jwt.adapter.js";
 import { User } from "../../../data/postgres/models/user.model.js";
 import { CustomError, type RegisterUserDto } from "../../../domain/index.js";
+import type { EmailService } from "../../common/services/email.service.js";
 
 /**
  * Service responsible for handling the business logic of user registration.
  * Manages data mapping, database persistence, and database-specific exception handling.
  */
 export class RegisterUserService {
+  //inyeccion de patron de dependencias
+  constructor(private readonly emailService: EmailService) {}
+
   /**
    * Executes the user registration process.
    * Maps the incoming DTO data to the database entity and attempts to persist it.
@@ -26,6 +33,7 @@ export class RegisterUserService {
     try {
       //const userCreated =
       await user.save();
+      this.sendLinkToEmailToValidateAccount(userData.fullname, userData.email);
       //return userCreated;
       return {
         message: "User created successfully",
@@ -34,6 +42,37 @@ export class RegisterUserService {
       this.throwException(error);
     }
   }
+
+  private sendLinkToEmailToValidateAccount = async (
+    fullname: string,
+    email: string,
+  ) => {
+    const token = await JwtAdapter.generateToken({ email }, "300s");
+
+    if (!token) throw CustomError.internalSever("Error getting token");
+
+    const link = `http://${envs.WEBSERVICE_URL}/api/users/validate-account/${token}`;
+
+    const html = `
+    
+    <h1>Validate Your Email</h1>
+
+    <p>Hi ${fullname}!, click on the link to validate your email:</p>
+
+    <a href="${link}">${email}</a>
+    `;
+
+    const isSent = this.emailService.sendEmail({
+      to: email,
+      subject: "Validate your account",
+      htmlBody: html,
+    });
+
+    if (!isSent)
+      throw CustomError.internalSever("Error sending verification email");
+
+    return true;
+  };
 
   /**
    * Intercepts database runtime errors and maps PostgreSQL error codes to standard HTTP exceptions.
@@ -60,5 +99,3 @@ export class RegisterUserService {
     return encriptAdapter.hash(password);
   }
 }
-
-//13-30
