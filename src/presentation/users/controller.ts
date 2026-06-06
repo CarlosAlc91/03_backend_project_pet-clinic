@@ -174,7 +174,12 @@ export class UserController {
       .catch((err) => this.handleError(err, res));
   };
 
-  validateAccount = (req: Request, res: Response) => {}
-}
+  validateAccount = (req: Request, res: Response) => {
+    const { token } = req.params;
 
-//12 - 34:00
+    this.registerUser
+      .validateAccount(token as string)
+      .then(() => res.send("Email validated successfully"))
+      .catch((err) => this.handleError(err, res));
+  };
+}

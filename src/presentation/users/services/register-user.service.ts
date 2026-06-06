@@ -43,6 +43,39 @@ export class RegisterUserService {
     }
   }
 
+  private findOneUserByEmail = async (email: string) => {
+    const user = await User.findOne({ where: { email: email } });
+
+    if (!user)
+      throw CustomError.internalSever("Email not registered in database");
+
+    return user;
+  };
+
+  public validateAccount = async (token: string) => {
+    const payload = await JwtAdapter.validateToken(token);
+
+    if (!payload) throw CustomError.badRequest("Ivalid Token");
+
+    const { email } = payload as { email: string };
+
+    if (!email) throw CustomError.internalSever("Email not found in token");
+
+    const user = await this.findOneUserByEmail(email);
+
+    user.status = true;
+
+    try {
+      await user.save()
+
+      return {
+        message: "User activated"
+      }
+    } catch (error) {
+      throw CustomError.internalSever("Something went wrong")
+    }
+  };
+
   private sendLinkToEmailToValidateAccount = async (
     fullname: string,
     email: string,
@@ -99,3 +132,5 @@ export class RegisterUserService {
     return encriptAdapter.hash(password);
   }
 }
+
+//13-1:00
