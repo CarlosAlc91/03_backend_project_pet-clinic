@@ -11,6 +11,7 @@ import { DeleteUserService } from "./services/delete-user.service.js";
 import { LoginUserService } from "./services/login-user.service.js";
 import { EmailService } from "../common/services/email.service.js";
 import { envs } from "../../config/envs.js";
+import { AuthMiddleware } from "../common/middlewares/auth.middleware.js";
 
 //creacion de cclase UserRoutes
 export class UserRoutes {
@@ -61,10 +62,16 @@ export class UserRoutes {
       deleteUser,
       loginUser,
     );
+    //these routes are public and if we place them after the middleware they're not running
+    router.post("/register", controller.register);
+    router.post("/login", controller.login);
+
+    router.get("/validate-account/:token", controller.validateAccount);
+    //this middleware will execuete within all the routes
+    router.use(AuthMiddleware.protect);
     //llamada del controlador, osea los metodos de los controladore
     router.get("/", controller.findAll);
 
-    router.post("/register", controller.register);
     //router.get("/login");
     //metodo para encontrar a un usuario por id
     router.get("/:id", controller.findOne);
@@ -74,8 +81,6 @@ export class UserRoutes {
 
     //detele, para eliminar informacion del usuario o al usuario
     router.delete("/:id", controller.delete);
-    router.post("/login", controller.login);
-    router.get("/validate-account/:token", controller.validateAccount);
 
     //retornamos la constante router que tiene el Router de express
     return router;

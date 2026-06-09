@@ -1,4 +1,5 @@
 //siempre se tiene que primero importar la libreria express
+import cookieParser from "cookie-parser";
 import express, { Router, type Request, type Response } from "express";
 
 //aqui es donde se va a configurar realmente la aplicacion
@@ -58,6 +59,8 @@ export class Server {
     this.app.use(express.json());
     //middleware que le ensena a express a leer urlencoded
     this.app.use(express.urlencoded({ extended: true }));
+
+    this.app.use(cookieParser());
 
     /*
 

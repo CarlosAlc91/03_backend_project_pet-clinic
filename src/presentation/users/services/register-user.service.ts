@@ -66,13 +66,13 @@ export class RegisterUserService {
     user.status = true;
 
     try {
-      await user.save()
+      await user.save();
 
       return {
-        message: "User activated"
-      }
+        message: "User activated",
+      };
     } catch (error) {
-      throw CustomError.internalSever("Something went wrong")
+      throw CustomError.internalSever("Something went wrong");
     }
   };
 
@@ -133,4 +133,4 @@ export class RegisterUserService {
   }
 }
 
-//13-1:00
+//13-1:30

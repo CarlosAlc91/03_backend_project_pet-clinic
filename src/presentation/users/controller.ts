@@ -99,7 +99,8 @@ export class UserController {
    */
   findOne = (req: Request, res: Response) => {
     const { id } = req.params; // Extract the ID from URL parameters
-    // Early validation: verify that the ID exists and is the correct type
+    // Early validation: verify that the ID exists and is the correct type+
+    
     if (!id || typeof id !== "string") {
       return res.status(400).json({ message: "User ID is required" });
     }
