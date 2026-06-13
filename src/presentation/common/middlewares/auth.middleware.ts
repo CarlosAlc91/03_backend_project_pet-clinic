@@ -2,7 +2,7 @@
 
 import type { NextFunction, Request, Response } from "express";
 import { JwtAdapter } from "../../../config/jwt.adapter.js";
-import { User } from "../../../data/postgres/models/user.model.js";
+import { User, UserRole } from "../../../data/postgres/models/user.model.js";
 
 export class AuthMiddleware {
   static async protect(req: Request, res: Response, next: NextFunction) {
@@ -32,4 +32,17 @@ export class AuthMiddleware {
       return res.status(500).json({ message: "Internal server error..." });
     }
   }
+
+  //restrict access depending on roles
+  static restrictTo = (...roles: UserRole[]) => {
+    return (req: Request, res: Response, next: NextFunction) => {
+      if (!roles.includes(req.body.sessionUser.role)) {
+        return res
+          .status(403)
+          .json({ message: "You're not authorized to access this route" });
+      }
+      next();
+    };
+  };
+
 }

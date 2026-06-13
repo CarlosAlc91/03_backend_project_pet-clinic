@@ -12,6 +12,7 @@ import { LoginUserService } from "./services/login-user.service.js";
 import { EmailService } from "../common/services/email.service.js";
 import { envs } from "../../config/envs.js";
 import { AuthMiddleware } from "../common/middlewares/auth.middleware.js";
+import { UserRole } from "../../data/postgres/models/user.model.js";
 
 //creacion de cclase UserRoutes
 export class UserRoutes {
@@ -80,9 +81,15 @@ export class UserRoutes {
     router.patch("/:id", controller.update);
 
     //detele, para eliminar informacion del usuario o al usuario
-    router.delete("/:id", controller.delete);
+    router.delete(
+      "/:id",
+      AuthMiddleware.restrictTo(UserRole.ADMIN),
+      controller.delete,
+    );
 
     //retornamos la constante router que tiene el Router de express
     return router;
   }
 }
+
+//14 - 24:00
