@@ -15,7 +15,16 @@ Table pet {
 
 */
 
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  type Relation,
+} from "typeorm";
+import { User } from "./user.model.js";
 
 @Entity()
 export class Pets extends BaseEntity {
@@ -54,4 +63,10 @@ export class Pets extends BaseEntity {
   //TODO: ADD RELATIONS FOREING KEYS WITH USER AND SPECIES
   //owner UUID [not null]
   //species_id UUID [not null]
+
+  @ManyToOne(() => User, (user) => user.pet)
+  @JoinColumn({ name: "owner" })
+  user: Relation<User>;
 }
+
+//14-40

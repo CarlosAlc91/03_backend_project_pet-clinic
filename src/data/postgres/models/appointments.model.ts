@@ -21,7 +21,16 @@ export enum AppointmentStatus {
   CANCELED = "canceled",
 }
 
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  type Relation,
+} from "typeorm";
+import { User } from "./user.model.js";
 
 @Entity()
 export class Appointments extends BaseEntity {
@@ -58,7 +67,10 @@ export class Appointments extends BaseEntity {
     nullable: false,
   })
   created_at: Date;
-}
 
+  @ManyToOne(() => User, (user) => user.appointment)
+    @JoinColumn({name: "doctor_user_id"})
+  user: Relation<User>;
+}
 
 //8 - 26:00

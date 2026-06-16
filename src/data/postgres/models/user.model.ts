@@ -1,6 +1,15 @@
 //Here we'll be creating the user model entitie from dbdiagram.io
 
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  type Relation,
+} from "typeorm";
+import { Pets } from "./pets.model.js";
+import { Appointments } from "./appointments.model.js";
 
 export enum UserRole {
   ADMIN = "admin",
@@ -85,4 +94,12 @@ export class User extends BaseEntity {
     nullable: false,
   })
   created_at: Date;
+
+  @OneToMany(() => Pets, (pet) => pet.user)
+  pet: Relation<Pets[]>;
+
+  @OneToMany(() => Appointments, (appointment) => appointment.user)
+  appointment: Relation<Appointments[]>;
 }
+
+

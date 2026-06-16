@@ -7,7 +7,15 @@ Table doctor{
 
 */
 
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  JoinColumn,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from "typeorm";
+import { User } from "./user.model.js";
 
 @Entity()
 export class Doctor extends BaseEntity {
@@ -24,4 +32,8 @@ export class Doctor extends BaseEntity {
 
   //TODO: ADD RELATIONS FOREING KEYS WITH USER
   //user_id VARCAHR [not null]
+
+  @OneToOne(() => User)
+  @JoinColumn({ name: "user_id" })
+  user: User;
 }
