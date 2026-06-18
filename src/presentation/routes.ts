@@ -2,6 +2,7 @@
 
 import { Router, type Request, type Response } from "express";
 import { UserRoutes } from "./users/routes.js";
+import { DoctorRoutes } from "./doctors/routes.js";
 
 //creacion de clase approutes
 export class AppRoutes {
@@ -27,6 +28,7 @@ export class AppRoutes {
      * router.get("/user_id", en el web se pone localhost:port/users/user_id
      */
     router.use("/api/users", UserRoutes.routes);
+    router.use("/api/doctors", DoctorRoutes.routes);
 
     //se retorna la constante router
     return router;
