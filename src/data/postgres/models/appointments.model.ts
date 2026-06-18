@@ -27,10 +27,12 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToOne,
   PrimaryGeneratedColumn,
   type Relation,
 } from "typeorm";
 import { User } from "./user.model.js";
+import { Pets } from "./pets.model.js";
 
 @Entity()
 export class Appointments extends BaseEntity {
@@ -69,8 +71,10 @@ export class Appointments extends BaseEntity {
   created_at: Date;
 
   @ManyToOne(() => User, (user) => user.appointment)
-    @JoinColumn({name: "doctor_user_id"})
+  @JoinColumn({ name: "doctor_user_id" })
   user: Relation<User>;
-}
 
-//8 - 26:00
+  @ManyToOne(() => Pets, (pet) => pet.appointment)
+  @JoinColumn({ name: "pet_id" })
+  pet: Relation<Pets>;
+}

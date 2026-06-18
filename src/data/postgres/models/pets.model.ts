@@ -21,10 +21,14 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
   type Relation,
 } from "typeorm";
 import { User } from "./user.model.js";
+import { Appointments } from "./appointments.model.js";
+import { Species } from "./species.model.js";
 
 @Entity()
 export class Pets extends BaseEntity {
@@ -67,6 +71,12 @@ export class Pets extends BaseEntity {
   @ManyToOne(() => User, (user) => user.pet)
   @JoinColumn({ name: "owner" })
   user: Relation<User>;
+
+  @OneToMany(() => Appointments, (appointment) => appointment.pet)
+  appointment: Relation<Appointments[]>;
+
+  @OneToOne(() => Species)
+  @JoinColumn({ name: "specie_id" })
+  specie: Relation<Species>;
 }
 
-//14-40

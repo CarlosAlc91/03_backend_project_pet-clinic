@@ -101,5 +101,3 @@ export class User extends BaseEntity {
   @OneToMany(() => Appointments, (appointment) => appointment.user)
   appointment: Relation<Appointments[]>;
 }
-
-
